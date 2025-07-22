@@ -6,7 +6,7 @@ type score = {
 };
 
 export function CommentsScore({ id, score }: score) {
-  const { IncreaseScore } = useCommentAction();
+  const { IncreaseScore, DecreaseScore } = useCommentAction();
 
   return (
     <span className="flex flex-col items-center justify-center gap-[8px] h-[102px] w-[40px] bg-Very-light-gray rounded-xl">
@@ -24,6 +24,10 @@ export function CommentsScore({ id, score }: score) {
       <a
         href="#"
         className="text-xl text-Grayish-Blue font-bold hover:text-Moderate-blue duration-200"
+        onClick={(e) => {
+          e.preventDefault();
+          DecreaseScore(id);
+        }}
       >
         -
       </a>

@@ -3,6 +3,8 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { ReplyComment, Comment, id } from "./types/types";
 //Fetching data
 import { fetchComments } from "../../services/asyncComment";
+//Utils functions
+import { ManipulateScore, AddReply } from "./utils/function";
 //Utils Storage
 import {
   fallBackComment,
@@ -27,18 +29,14 @@ export const commentSlice = createSlice({
   initialState,
   reducers: {
     increaseScore: (state, action: PayloadAction<id>) => {
-      const Increase = (comment: Comment[]) => {
-        for (let i = 0; i < comment.length; i++) {
-          if (comment[i].id === action.payload) {
-            comment[i].score += 1;
-            return;
-          } else if (comment[i].replies.length) {
-            Increase(comment[i].replies);
-          }
-        }
-      };
-      Increase(state.items);
-      savedStorage(state.items);
+      const result = ManipulateScore(state.items, action.payload, action.type);
+      state.items = result;
+      savedStorage(result);
+    },
+    decreaseScore: (state, action: PayloadAction<id>) => {
+      const result = ManipulateScore(state.items, action.payload, action.type);
+      state.items = result;
+      savedStorage(result);
     },
     addNewComment: (state, action: PayloadAction<Comment>) => {
       const id = nextId(state.items);
@@ -47,26 +45,12 @@ export const commentSlice = createSlice({
       savedStorage(state.items);
     },
     replyComment: (state, action: PayloadAction<ReplyComment>) => {
-      //esta copia la debo quitar, solo esta para probar el funcionamiento
       const { id, reply } = action.payload;
       const next = nextId(state.items);
 
-      const addReply = (comment: Comment[]) => {
-        for (let i = 0; i < comment.length; i++) {
-          if (comment[i].id === id) {
-            comment[i].replies.push({
-              ...reply,
-              id: next,
-              replyingTo: comment[i].user.username,
-            });
-            return;
-          } else if (comment[i].replies.length) {
-            addReply(comment[i].replies);
-          }
-        }
-      };
-      addReply(state.items);
-      savedStorage(state.items);
+      const result = AddReply(id, reply, next, state.items);
+      state.items = result;
+      savedStorage(result);
     },
   },
   extraReducers: (builder) => {
@@ -99,5 +83,5 @@ export const commentSlice = createSlice({
 });
 
 export default commentSlice.reducer;
-export const { increaseScore, addNewComment, replyComment } =
+export const { increaseScore, decreaseScore, addNewComment, replyComment } =
   commentSlice.actions;

@@ -19,6 +19,7 @@ export function Container() {
     const newOrder = order;
     setOrderBy(newOrder);
   };
+
   useEffect(() => {
     const result = sortedComment(orderBy, comments);
     setOrderedComments(result);

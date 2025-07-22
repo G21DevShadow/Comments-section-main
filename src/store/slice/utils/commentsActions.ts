@@ -1,5 +1,10 @@
 import { useAppDispatch } from "../../../hooks/store";
-import { increaseScore, addNewComment, replyComment } from "../commentSlice";
+import {
+  increaseScore,
+  decreaseScore,
+  addNewComment,
+  replyComment,
+} from "../commentSlice";
 import { type id, type Comment } from "../types/types";
 
 export function useCommentAction() {
@@ -7,6 +12,9 @@ export function useCommentAction() {
 
   const IncreaseScore = (id: id) => {
     dispatch(increaseScore(id));
+  };
+  const DecreaseScore = (id: id) => {
+    dispatch(decreaseScore(id));
   };
 
   const AddNewComment = (comment: Comment) => {
@@ -19,6 +27,7 @@ export function useCommentAction() {
 
   return {
     IncreaseScore,
+    DecreaseScore,
     AddNewComment,
     ReplyComment,
   };
