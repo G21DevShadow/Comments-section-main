@@ -18,7 +18,6 @@ export const fallBackComment: Comment[] = [
 export function loadStorage() {
   try {
     const store = window.localStorage.getItem("comment");
-
     return store ? (JSON.parse(store) as Comment[]) : [];
   } catch (e) {
     return [];

@@ -27,13 +27,9 @@ export const commentSlice = createSlice({
   initialState,
   reducers: {
     increaseScore: (state, action: PayloadAction<id>) => {
-      //Nota para mas adelantes estas funciones
       const Increase = (comment: Comment[]) => {
-        //deben ser puras.
         for (let i = 0; i < comment.length; i++) {
-          //Esta función la puedo mejorar que reciba un objeto
           if (comment[i].id === action.payload) {
-            //con arreglo y el tipo de acción ya sea del score,reply
             comment[i].score += 1;
             return;
           } else if (comment[i].replies.length) {
