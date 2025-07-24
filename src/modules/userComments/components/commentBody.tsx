@@ -1,33 +1,77 @@
-import { type User } from "../../../store/slice/types/types";
+import { type ReactNode } from "react";
+import { type id } from "../../../store/slice/types/types";
+//Component
+import { IconReply } from "./ComponentsIcons/reply";
+import { IconDelete } from "./ComponentsIcons/delete";
+import { IconUpdate } from "./ComponentsIcons/update";
+//Hook
+import { useActivate } from "../hooks/useActivate";
+//Comments actions
+import { useCommentAction } from "../../../store/slice/utils/commentsActions";
 
 interface props {
+  id: id;
   content: string;
-  createdAt: string;
-  user: User;
   handleClick: () => void;
+  user: string;
+  children: ReactNode;
 }
 
-export function CommentBody({ content, createdAt, user, handleClick }: props) {
+export function CommentBody({
+  id,
+  content,
+  handleClick,
+  user,
+  children,
+}: props) {
+  const { active: isTxtActive, handleActivate: handleTxtActive } =
+    useActivate();
+  const { UpdateComment } = useCommentAction();
+
+  const handleUpdateComment = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = new window.FormData(e.currentTarget);
+    const txtArea = form.get("txtComment") as string;
+    if (!txtArea) {
+      return;
+    }
+    UpdateComment(id, txtArea);
+  };
+
   return (
-    <div className="grid w-full">
+    <form
+      action=""
+      className="grid gap-3 w-full"
+      onSubmit={handleUpdateComment}
+    >
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-5">
-          <img src={user.image} alt="Image user" className="w-10 h-10" />
-          <p className="text-Dark-blue font-bold">{user.username}</p>
-          <p className="text-Grayish-Blue">{createdAt}</p>
-        </div>
-        <span className="flex items-center gap-2 text-Moderate-blue cursor-pointer fill-Moderate-blue hover:fill-Light-grayish-blue hover:text-Light-grayish-blue duration-200">
-          <svg width="14" height="13" xmlns="http://www.w3.org/2000/svg">
-            <path d="M.227 4.316 5.04.16a.657.657 0 0 1 1.085.497v2.189c4.392.05 7.875.93 7.875 5.093 0 1.68-1.082 3.344-2.279 4.214-.373.272-.905-.07-.767-.51 1.24-3.964-.588-5.017-4.829-5.078v2.404c0 .566-.664.86-1.085.496L.227 5.31a.657.657 0 0 1 0-.993Z" />
-          </svg>
-          <p className="font-bold" onClick={handleClick}>
-            Reply
-          </p>
-        </span>
+        {children}
+        {(user === "juliusomo" && (
+          <div className="flex gap-5">
+            <IconDelete />
+            <IconUpdate handleClick={handleTxtActive} />
+          </div>
+        )) || <IconReply handleClick={handleClick} />}
       </div>
-      <span className="self-end max-w-[460px] h-[68px] overflow-auto">
-        <p className="text-[15px] text-Grayish-Blue">{content}</p>
-      </span>
-    </div>
+      <textarea
+        name="txtComment"
+        disabled={!isTxtActive}
+        className={`self-end max-w-[465px] h-[80px] text-[15px] text-Grayish-Blue py-1.5 px-2.5 rounded-[6px] resize-none outline-none border-2 duration-200 ${
+          isTxtActive ? "border-Moderate-blue" : "border-transparent"
+        }`}
+      >
+        {content}
+      </textarea>
+      {isTxtActive && (
+        <button
+          type="submit"
+          className="justify-self-end w-30 h-11 text-white bg-Moderate-blue rounded-[8px] hover:bg-Light-grayish-blue hover:cursor-pointer duration-200"
+        >
+          UPDATE
+        </button>
+      )}
+    </form>
   );
 }
+
+/*Continuar con la accion de editar el comentario*/

@@ -1,12 +1,13 @@
 //Types
 import { type Comment } from "../../../store/slice/types/types";
 //Hook
-import { useViewReplies } from "../hooks/viewReplies";
+import { useActivate } from "../hooks/useActivate";
 //React
-import React from "react";
+import React, { use } from "react";
 //Components
 import { CommentsScore } from "./commentsScore";
 import { CommentBody } from "./commentBody";
+import { CommentHead } from "./commentHead";
 import { Form } from "./form";
 
 export function Comment({
@@ -17,8 +18,9 @@ export function Comment({
   score,
   replies = [],
 }: Comment) {
-  const { view: viewReplies, handleView: handleViewReplies } = useViewReplies();
-  const { view: viewReply, handleView: handleViewReply } = useViewReplies();
+  const { active: viewReplies, handleActivate: handleViewReplies } =
+    useActivate();
+  const { active: viewReply, handleActivate: handleViewReply } = useActivate();
 
   const handleClickReplies: React.ComponentProps<"a">["onClick"] = (e) => {
     e.preventDefault();
@@ -27,14 +29,17 @@ export function Comment({
 
   return (
     <div className="grid justify-items-end gap-5 w-full">
-      <div className="relative flex gap-10 h-[170px] w-full py-5 px-7 bg-white rounded-xl">
+      <div className="relative flex gap-10 min-h-[186px] w-full py-5 px-7 bg-white rounded-xl">
         <CommentsScore score={score} id={id} />
         <CommentBody
+          id={id}
           content={content}
-          createdAt={createdAt}
-          user={user}
           handleClick={handleViewReply}
-        />
+          user={user.username}
+        >
+          <CommentHead user={user} createdAt={createdAt} />
+        </CommentBody>
+
         {replies.length > 0 && (
           <a
             href="#"

@@ -24,6 +24,7 @@ export function ManipulateScore(comment: Comment[], id: id, action: string) {
 
 export function AddReply(id: id, reply: Comment, next: id, comment: Comment[]) {
   const copyComment = [...comment];
+
   const addReply = (comment: Comment[]) => {
     for (let i = 0; i < comment.length; i++) {
       if (comment[i].id === id) {
@@ -40,5 +41,23 @@ export function AddReply(id: id, reply: Comment, next: id, comment: Comment[]) {
   };
 
   addReply(copyComment);
+  return copyComment;
+}
+
+export function UpdateComm(id: id, text: string, comment: Comment[]) {
+  const copyComment = [...comment];
+
+  const updateComment = (comment: Comment[]) => {
+    for (let i = 0; i < comment.length; i++) {
+      if (comment[i].id === id) {
+        comment[i].content = text;
+        return;
+      } else if (comment[i].replies.length) {
+        updateComment(comment[i].replies);
+      }
+    }
+  };
+
+  updateComment(copyComment);
   return copyComment;
 }
