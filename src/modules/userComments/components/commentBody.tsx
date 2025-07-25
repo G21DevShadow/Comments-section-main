@@ -12,7 +12,8 @@ import { useCommentAction } from "../../../store/slice/utils/commentsActions";
 interface props {
   id: id;
   content: string;
-  handleClick: () => void;
+  handleReply: () => void;
+  handleModal: () => void;
   user: string;
   children: ReactNode;
 }
@@ -20,7 +21,8 @@ interface props {
 export function CommentBody({
   id,
   content,
-  handleClick,
+  handleReply,
+  handleModal,
   user,
   children,
 }: props) {
@@ -46,12 +48,12 @@ export function CommentBody({
     >
       <div className="flex items-center justify-between">
         {children}
-        {(user === "juliusomo" && (
+        {(user === "Juliusomo" && (
           <div className="flex gap-5">
-            <IconDelete />
+            <IconDelete handleClick={handleModal} />
             <IconUpdate handleClick={handleTxtActive} />
           </div>
-        )) || <IconReply handleClick={handleClick} />}
+        )) || <IconReply handleClick={handleReply} />}
       </div>
       <textarea
         name="txtComment"

@@ -4,7 +4,12 @@ import type { ReplyComment, Comment, id } from "./types/types";
 //Fetching data
 import { fetchComments } from "../../services/asyncComment";
 //Utils functions
-import { ManipulateScore, AddReply, UpdateComm } from "./utils/function";
+import {
+  ManipulateScore,
+  AddReply,
+  UpdateComm,
+  DeleteComm,
+} from "./utils/function";
 //Utils Storage
 import {
   fallBackComment,
@@ -58,7 +63,11 @@ export const commentSlice = createSlice({
       state.items = result;
       savedStorage(result);
     },
-    deleteComment: (state, action: PayloadAction<id>) => {},
+    deleteComment: (state, action: PayloadAction<id>) => {
+      const result = DeleteComm(action.payload, state.items);
+      state.items = result;
+      savedStorage(result);
+    },
   },
   extraReducers: (builder) => {
     builder

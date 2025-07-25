@@ -5,6 +5,7 @@ import {
   addNewComment,
   replyComment,
   updateComment,
+  deleteComment,
 } from "../commentSlice";
 import { type id, type Comment } from "../types/types";
 
@@ -29,11 +30,15 @@ export function useCommentAction() {
     dispatch(updateComment({ id, text }));
   };
 
+  const DeleteComment = (id: id) => {
+    dispatch(deleteComment(id));
+  };
   return {
     IncreaseScore,
     DecreaseScore,
     AddNewComment,
     ReplyComment,
     UpdateComment,
+    DeleteComment,
   };
 }

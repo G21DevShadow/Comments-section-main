@@ -61,3 +61,25 @@ export function UpdateComm(id: id, text: string, comment: Comment[]) {
   updateComment(copyComment);
   return copyComment;
 }
+
+export function DeleteComm(id: id, comment: Comment[]) {
+  const copyComment = [...comment];
+
+  const deleteComment = (comment: Comment[]) => {
+    for (let i = 0; i < comment.length; i++) {
+      const isComm = comment.findIndex((comm) => comm.id === id);
+
+      if (isComm !== -1) {
+        comment.splice(isComm, 1);
+        return;
+      }
+
+      if (comment[i].replies.length) {
+        deleteComment(comment[i].replies);
+      }
+    }
+  };
+
+  deleteComment(copyComment);
+  return copyComment;
+}

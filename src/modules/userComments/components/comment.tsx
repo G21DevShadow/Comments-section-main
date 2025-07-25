@@ -9,6 +9,7 @@ import { CommentsScore } from "./commentsScore";
 import { CommentBody } from "./commentBody";
 import { CommentHead } from "./commentHead";
 import { Form } from "./form";
+import { ModalComment } from "./modalDeleteComment";
 
 export function Comment({
   id,
@@ -18,6 +19,7 @@ export function Comment({
   score,
   replies = [],
 }: Comment) {
+  const { active: viewModal, handleActivate: handleViewModal } = useActivate();
   const { active: viewReplies, handleActivate: handleViewReplies } =
     useActivate();
   const { active: viewReply, handleActivate: handleViewReply } = useActivate();
@@ -32,9 +34,10 @@ export function Comment({
       <div className="relative flex gap-10 min-h-[186px] w-full py-5 px-7 bg-white rounded-xl">
         <CommentsScore score={score} id={id} />
         <CommentBody
+          handleModal={handleViewModal}
           id={id}
           content={content}
-          handleClick={handleViewReply}
+          handleReply={handleViewReply}
           user={user.username}
         >
           <CommentHead user={user} createdAt={createdAt} />
@@ -50,6 +53,8 @@ export function Comment({
           </a>
         )}
       </div>
+
+      {viewModal && <ModalComment id={id} handleClick={handleViewModal} />}
 
       {(viewReplies || viewReply) && (
         <div className="grid justify-items-end gap-5 max-h-[510px] w-[98%] min-w-[620px] border-l border-Light-grayish-blue ">
