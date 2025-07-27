@@ -17,6 +17,8 @@ import {
   savedStorage,
   nextId,
 } from "./utils/storage";
+//Sonner
+import { toast } from "sonner";
 
 interface CommentsState {
   items: Comment[];
@@ -37,17 +39,20 @@ export const commentSlice = createSlice({
       const result = ManipulateScore(state.items, action.payload, action.type);
       state.items = result;
       savedStorage(result);
+      toast.success("score increased correctly");
     },
     decreaseScore: (state, action: PayloadAction<id>) => {
       const result = ManipulateScore(state.items, action.payload, action.type);
       state.items = result;
       savedStorage(result);
+      toast.success("score reduced correctly");
     },
     addNewComment: (state, action: PayloadAction<Comment>) => {
       const id = nextId(state.items);
       const newComment = { ...action.payload, id: id };
       state.items.push(newComment);
       savedStorage(state.items);
+      toast.success("comment added successfully");
     },
     replyComment: (state, action: PayloadAction<ReplyComment>) => {
       const { id, reply } = action.payload;
@@ -56,17 +61,20 @@ export const commentSlice = createSlice({
       const result = AddReply(id, reply, next, state.items);
       state.items = result;
       savedStorage(result);
+      toast.success("answer added successfully");
     },
     updateComment: (state, action: PayloadAction<{ id: id; text: string }>) => {
       const { id, text } = action.payload;
       const result = UpdateComm(id, text, state.items);
       state.items = result;
       savedStorage(result);
+      toast.success("comment updated correctly");
     },
     deleteComment: (state, action: PayloadAction<id>) => {
       const result = DeleteComm(action.payload, state.items);
       state.items = result;
       savedStorage(result);
+      toast.success("comment successfully deleted");
     },
   },
   extraReducers: (builder) => {
